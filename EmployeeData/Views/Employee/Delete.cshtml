@@ -1,0 +1,74 @@
+﻿@model EmployeeData.Models.EmployeeViewModel
+
+@{
+	ViewData["Title"] = "Delete Employee";
+	var errorMessage = TempData["errorMessage"]?.ToString();
+}
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-8 mx-auto">
+			@if (!string.IsNullOrWhiteSpace(@errorMessage))
+			{
+				<div class="alert alert-danger mb-2">
+					<strong>error! </strong> @errorMessage
+					<button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+				</div>
+			}
+
+			<div class="border rounded p-3">
+				<h3>@ViewData["Title"]</h3>
+				<hr />
+				<form action="Delete" method="post" autocomplete="off">
+					<div class="mb-2">
+						<label class="form-label">Id</label>
+						<input type="text" class="form-control" asp-for="Id" readonly />
+					</div>
+					<div class="mb-2">
+						<label class="form-label">First Name</label>
+						<input type="text" class="form-control" asp-for="FirstName" readonly />
+					</div>
+					<div class="mb-2">
+						<label class="form-label">First Name</label>
+						<input type="text" class="form-control" asp-for="LastName" readonly />
+					</div>
+					<div class="mb-2">
+						<label class="form-label">Date of Birth</label>
+						<input type="date" class="form-control" asp-for="DOB" readonly /> 
+					</div>
+					<div class="mb-2">
+						<label class="form-label">Designation</label>
+						<input type="text" class="form-control" asp-for="Designation" readonly />
+					</div>
+					<div class="mb-2">
+						<label class="form-label">Experiance</label>
+						<input type="text" class="form-control" asp-for="Experiance" readonly />
+					</div>
+					<div class="mb-2">
+						<label class="form-label">Salary</label>
+						<div class="input-group">
+							<span class="input-text-group">Rs.</span>
+							<input type="text" class="form-control" asp-for="Salary" readonly />
+						</div>
+					</div>
+					<div class="button-grid pt-2 text-end">
+						<button id="cancelButton" class="btn btn-secondary">Cancel</button>
+						<button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure autofocus delete employee : @Model.FullName')" >Delete</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+@section Scripts {
+	<script>
+		function Login_Click() {
+			// Redirect to the previous page
+			window.history.back();
+		}
+
+		// Attach click event to the "Cancel" button
+		document.getElementById("cancelButton").addEventListener("click", Login_Click);
+	</script>
+}

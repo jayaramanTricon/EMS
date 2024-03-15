@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\jayaraman\source\repos\EmployeeDataManagement\EmployeeData\bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2024-03-15T07:40:14.1072268Z;True|2024-03-15T13:06:43.6313207+05:30;True|2024-03-15T12:45:05.0137280+05:30;True|2024-03-15T12:19:36.2849471+05:30;True|2024-03-15T12:09:24.5800890+05:30;True|2024-03-14T17:38:18.2001278+05:30;True|2024-03-14T15:16:26.1745648+05:30;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>
