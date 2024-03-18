@@ -1,4 +1,4 @@
-name: Deploy Core Web App
+name: Deploy Employee Data
 
 on:
   workflow_dispatch:
