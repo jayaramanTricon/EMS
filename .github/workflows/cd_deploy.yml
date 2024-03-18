@@ -1,0 +1,81 @@
+name: Deploy Core Web App
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "CoreWebApp-**"
+env:
+  AppName: ${{ startsWith(github.ref, 'refs/tags/CoreWebApp-dev') && 'CoreWebApp_dev' || startsWith(github.ref, 'refs/tags/CoreWebApp-qa') && 'CoreWebApp_qa' || 'CoreWebApp_Prod' }}
+
+jobs:
+  build:
+    runs-on: [self-hosted]
+
+    steps:
+    - uses: actions/checkout@v3
+     
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x  
+    
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      id: buildstep
+      run: dotnet build GithubCiCdToIIS\GithubCiCdToIIS.csproj --configuration Release --no-restore
+
+    - name: Project publish
+      id: publishstep
+      run: dotnet publish --no-build -c Release GithubCiCdToIIS\GithubCiCdToIIS.csproj -o "${{env.DOTNET_ROOT}}/${{ env.AppName }}"
+    
+    - name: Deploy to IIS
+      id: deploystep
+      run: |
+        if ((Get-WebSiteState -Name ${{ env.AppName }}).Value -eq "Started")
+        {
+            Stop-WebSite -Name ${{ env.AppName }}
+            echo "Stopped Website ${{ env.AppName }}"
+        }
+        if ((Get-WebAppPoolState -Name ${{ env.AppName }}).Value -eq "Started")
+        {
+            Stop-WebAppPool -Name ${{ env.AppName }}
+            echo "Stopped Application Pool ${{ env.AppName }}"
+        }
+        
+        Start-Sleep -s 15        
+        Copy-Item "${{env.DOTNET_ROOT}}/${{ env.AppName }}/*" "E:\ASPDOTNET_Deployment\TestApp\${{ env.AppName }}" -Recurse -Force
+        
+        if ((Get-WebSiteState -Name ${{ env.AppName }}).Value -eq "Stopped")
+        {
+            Start-WebSite -Name ${{ env.AppName }}
+            echo "Started Website ${{ env.AppName }}"
+        }
+        if ((Get-WebAppPoolState -Name ${{ env.AppName }}).Value -eq "Stopped")
+        {
+            Start-WebAppPool -Name ${{ env.AppName }}
+            echo "Started Application Pool ${{ env.AppName }}"
+        }
+      
+        if ($lastexitcode -lt 8) { $global:lastexitcode = 0 }
+    
+    - name: Build failing step (on failure)
+      if: ${{ failure() && steps.buildstep.conclusion == 'failure' }}
+      run: |
+          echo "Build failed"
+          exit 1
+    
+    - name: Publish failing step (on failure)
+      if: ${{ failure() && steps.publishstep.conclusion == 'failure' }}
+      run: |
+          echo "Publish failed"
+          exit 1
+          
+    - name: Deploy failing step (on failure)
+      if: ${{ failure() && steps.deploystep.conclusion == 'failure' }}
+      run: |
+          echo "Deployment failed"
+          exit 1
