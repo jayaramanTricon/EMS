@@ -6,7 +6,7 @@ on:
     tags:
       - "EmployeeData-**"
 env:
-  AppName: ${{ startsWith(github.ref, 'refs/tags/EmployeeData-dev') && 'EmployeeData_dev' || startsWith(github.ref, 'refs/tags/EmployeeData-qa') && 'EmployeeData_qa' || 'EmployeeData_Prod' }}
+  AppName: ${{ startsWith(github.ref, 'refs/tags/TestApp-dev') && 'TestApp_dev' || startsWith(github.ref, 'refs/tags/TestApp-qa') && 'TestApp_qa' || 'TestApp_prod' }}
 
 jobs:
   build:
@@ -47,7 +47,7 @@ jobs:
         }
         
         Start-Sleep -s 15        
-        Copy-Item "${{env.DOTNET_ROOT}}/${{ env.AppName }}/*" "E:\ASPDOTNET_Deployment\TestApp\${{ env.AppName }}" -Recurse -Force
+        Copy-Item "${{env.DOTNET_ROOT}}/${{ env.AppName }}/*" "E:\ASPDOTNET_Deployment\${{ env.AppName }}" -Recurse -Force
         
         if ((Get-WebSiteState -Name ${{ env.AppName }}).Value -eq "Stopped")
         {
