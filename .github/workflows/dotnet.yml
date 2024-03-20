@@ -3,9 +3,9 @@ name: Build
 on:
   workflow_dispatch:
   push:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "qa" ]
   pull_request:
-    branches: [ "master", "dev" ]
+    branches: [ "master", "dev", "qa" ]
  
 env:
   PROJECT_SLN_File_NAME: EmployeeDataManagement.sln
